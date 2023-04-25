@@ -89,4 +89,3 @@ class ILP(object):
         print("opt_cost:{}".format(total_cost), flush=True)
         self.cost_opt = total_cost
         print(dict(sorted(total_sol.items(), key=lambda item: item[1], reverse=True)), flush=True)
-

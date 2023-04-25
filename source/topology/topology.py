@@ -136,28 +136,28 @@ class Topology:
         print("# of l1 node:{}, # of fibers:{}".format(len(self.optic.nodes), len(self.optic.fibers)))
 
     def import_lease_from_file(self, file_path):
-        df = pd.read_excel(file_path, sheet_name="Leases")
+        df = pd.read_excel(file_path, sheet_name="RTT-Capacity")
 
         for index, row in df.iterrows():
-            self.optic.register_node(row['src'])
-            self.optic.register_node(row['dst'])
-            self.fiber_from_lease.add(row['name'])
-            self.optic.register_fiber(row['name'],self.optic.get_node_by_name(row['src']),self.optic.get_node_by_name(row['dst']),\
-                length=int(row['rtt']),lease_flag=True,min_bw=int(row['min_capacity_gbps']),max_bw=int(row['max_capacity_gbps']))
+            self.optic.register_node(row['Source'])
+            self.optic.register_node(row['Destination'])
+            self.fiber_from_lease.add(row['LinkName'])
+            self.optic.register_fiber(row['LinkName'],self.optic.get_node_by_name(row['Source']),self.optic.get_node_by_name(row['Destination']),\
+                length=int(row['RTT']),lease_flag=True,min_bw=int(row['CapacityMin']),max_bw=int(row['CapacityMax']))
 
-            src_name = min(row['src'], row['dst'])
-            dst_name = max(row['src'], row['dst'])
+            src_name = min(row['Source'], row['Destination'])
+            dst_name = max(row['Source'], row['Destination'])
             
             od_pair = (src_name, dst_name)
             try:
-                self.od_pair_map_lease_name[od_pair].append(row['name'])
+                self.od_pair_map_lease_name[od_pair].append(row['LinkName'])
             except:
-                self.od_pair_map_lease_name[od_pair] = [row['name']]
+                self.od_pair_map_lease_name[od_pair] = [row['LinkName']]
             
             try:
-                self.od_pair_map_optic_name[od_pair].append(row['name'])
+                self.od_pair_map_optic_name[od_pair].append(row['LinkName'])
             except:
-                self.od_pair_map_optic_name[od_pair] = [row['name']]
+                self.od_pair_map_optic_name[od_pair] = [row['LinkName']]
             
             self.optic_pair_name_set.add(od_pair)
 
@@ -202,8 +202,8 @@ class Topology:
                 assert(k in self.optic.fibers)
 
                 # check the solution
-                assert(int(row['final_capacity_gbps'])<=int(row['max_capacity_gbps']))
-                assert(int(row['final_capacity_gbps'])>=init_capa)
+                assert(int(row['final_capacity_gpbs'])<=int(row['max_capacity_gbps']))
+                assert(int(row['final_capacity_gpbs'])>=init_capa)
 
                 fiber_map_spectrum[k] = float(v)
 
@@ -295,8 +295,10 @@ class Topology:
         complete_graph = self.ip.generate_graph_from_multi_edge([])
 
         (sat_flag0, opt_cnt0) = gurobi_c.check_sf(complete_graph, delta_bw_matrix_list[:-1], self.tm.data['no-bronze'], self.l3node_map_stub, self.load_factor)
+        # (sat_flag0, opt_cnt0) = (True,1)
         start_time = time.time()
         (sat_flag1, opt_cnt1) = gurobi_c.check_sf(complete_graph, delta_bw_matrix_list[-1:], self.tm.data['all'], self.l3node_map_stub, self.load_factor)
+        # (sat_flag1, opt_cnt1) = (True,1)
         print("check init states steady state num:{}, time:{}".format(opt_cnt1, time.time()-start_time))
         if sat_flag0 and sat_flag1:
             sat_flag = True
@@ -336,9 +338,11 @@ class Topology:
         complete_graph = self.ip.generate_graph_from_multi_edge([])
         start_time = time.time()
         (sat_flag0, opt_cnt0) = gurobi_c.check_sf(complete_graph, delta_bw_matrix_list[:-1], self.tm.data['no-bronze'],self.l3node_map_stub, self.load_factor)
+        # (sat_flag0, opt_cnt0) = (True,1)
         print("check sol spofs num:{}, time:{}".format(opt_cnt0, time.time()-start_time))
         start_time = time.time()
         (sat_flag1, opt_cnt1) = gurobi_c.check_sf(complete_graph, delta_bw_matrix_list[-1:], self.tm.data['all'],self.l3node_map_stub, self.load_factor)
+        # (sat_flag1, opt_cnt1) = (True,1)
         print("check sol steady state num:{}, time:{}".format(opt_cnt1, time.time()-start_time))
         if sat_flag0 and sat_flag1:
             sat_flag = True
@@ -359,20 +363,20 @@ class Topology:
 
             if simplified_tm > 0 and index > simplified_tm:
                 break
-            assert(row['src'] in self.ip.routers)
-            assert(row['dst'] in self.ip.routers)
-            assert((row['src'], row['dst'], row['cos']) not in flow_identifier)
+            assert(row['Source'] in self.ip.routers)
+            assert(row['Destination'] in self.ip.routers)
+            assert((row['Source'], row['Destination'], row['COS']) not in flow_identifier)
 
-            flow_identifier.add((row['src'], row['dst'], row['cos']))
-            adjust_flow_size = math.ceil(float(row['capacity_gbps']))
+            flow_identifier.add((row['Source'], row['Destination'], row['COS']))
+            adjust_flow_size = math.ceil(float(row['ActualCapacity']))
             
-            self.tm.register_flow(row['name'], self.ip.get_router_by_name(row['src']), self.ip.get_router_by_name(row['dst']), \
-                adjust_flow_size, row['cos'])
+            self.tm.register_flow(row['LinkName'], self.ip.get_router_by_name(row['Source']), self.ip.get_router_by_name(row['Destination']), \
+                adjust_flow_size, row['COS'])
             
-            od_pair = (min(row['src'], row['dst']), max(row['src'], row['dst']))
+            od_pair = (min(row['Source'], row['Destination']), max(row['Source'], row['Destination']))
             flow_od_pairs.add(od_pair)
-            self.tm_nodes.add(row['src'])
-            self.tm_nodes.add(row['dst'])
+            self.tm_nodes.add(row['Source'])
+            self.tm_nodes.add(row['Source'])
             
         print("# of flows:{}".format(len(self.tm.flows)))
 
@@ -475,10 +479,18 @@ class Topology:
                 # flow formulation
                 (sat_flag, opt_cnt) = gurobi_c.check(complete_graph, self.delta_bw_matrix_list[self.spof_failed_point:-1], \
                     self.tm.data['no-bronze'],self.l3node_map_stub, self.load_factor)
+                # (sat_flag, opt_cnt) = (True,1)
             else:
                 # source aggregation
+                # print(complete_graph)
+                # print(self.delta_bw_matrix_list[self.spof_failed_point:-1])
+                # print(self.tm.data['no-bronze'])
+                # print(self.l3node_map_stub)
+                # print(self.load_factor)
+                
                 (sat_flag, opt_cnt) = gurobi_c.check_sf(complete_graph, self.delta_bw_matrix_list[self.spof_failed_point:-1], \
-                    self.tm.data['no-bronze'],self.l3node_map_stub, self.load_factor)
+                   self.tm.data['no-bronze'],self.l3node_map_stub, self.load_factor)
+                #(sat_flag, opt_cnt) = (True, 1)
             self.spof_failed_point += (opt_cnt-1)
             cache_hit_flag = False
             if len(state_map_failed_point_cache) < cache_max:
@@ -492,10 +504,12 @@ class Topology:
             # flow formulation
             (sat_flag, opt_cnt) = gurobi_c.check(complete_graph, self.delta_bw_matrix_list[-1:], self.tm.data['all'], \
                 self.l3node_map_stub, self.load_factor)
+            # (sat_flag, opt_cnt) = (True,1)
         else:
             # source aggregation
             (sat_flag, opt_cnt) = gurobi_c.check_sf(complete_graph, self.delta_bw_matrix_list[-1:], self.tm.data['all'], \
-                self.l3node_map_stub, self.load_factor)
+               self.l3node_map_stub, self.load_factor)
+            # (sat_flag, opt_cnt) = (True, 1)
         return sat_flag, cache_hit_flag, state_map_failed_point_cache
     
     # to satisfy the maximal spectrum and capacity constraints of fibers, set mask.
