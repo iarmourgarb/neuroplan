@@ -8,11 +8,11 @@ from topology.topology import Topology
 def read_topo(topo_name, adjust_factor_in=0.5):
     assert(topo_name in ["A", "B", "C", "D", "E"])
     topo_name_map_file_path = {}
-    topo_name_map_file_path['A'] = './data/topologies/VisionNet_topology.xlsx'
-    #topo_name_map_file_path['B'] = '/scratch/gpfs/ia3026/cos561/neuroplan/source/data/topologies/Globalcenter_topology.xlsx'
-    # topo_name_map_file_path['C'] = '/scratch/gpfs/ia3026/cos561/neuroplan/source/data/topologies/Tinet_topology.xlsx'
-    # topo_name_map_file_path['D'] = '/scratch/gpfs/ia3026/cos561/neuroplan/source/data/topologies/Cogentco_topology.xlsx'
-    # topo_name_map_file_path['E'] = '/scratch/gpfs/ia3026/cos561/neuroplan/source/data/topologies/KDL_topology.xlsx'
+    topo_name_map_file_path['A'] = './data/topologies/max_flow_topos/VisionNet_topology.xlsx'
+    topo_name_map_file_path['B'] = './data/topologies/max_flow_topos/Globalcenter_topology.xlsx'
+    topo_name_map_file_path['C'] = './data/topologies/max_flow_topos/Tinet_topology.xlsx'
+    topo_name_map_file_path['D'] = './data/topologies/max_flow_topos/Cogentco_topology.xlsx'
+    topo_name_map_file_path['E'] = './data/topologies/max_flow_topos/KDL_topology.xlsx'
     
     file_path = topo_name_map_file_path[topo_name]
     
