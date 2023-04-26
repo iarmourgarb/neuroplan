@@ -220,6 +220,7 @@ def find_edge_capacity_heuristic_flow_betweeness(g):
     # m = nx.read_graphml(f).to_undirected()
     
     # g = nx.Graph(m)
+    g = g.to_undirected()
 
 
     cut_edges = nx.edge_current_flow_betweenness_centrality(g, normalized=True)
@@ -241,6 +242,7 @@ def find_edge_capacity_heuristic_flow_communicability_centrality(g):
     #m = nx.read_graphml(f).to_undirected()
     
     #g = nx.Graph(m)
+    g = g.to_undirected()
 
     cut_edges = {}
     nodes = nx.communicability_exp(g)
@@ -260,10 +262,10 @@ def find_edge_capacity_heuristic_flow_communicability_centrality(g):
 
 
 if __name__ == '__main__':
-    for file in ['VisionNet_with_label_unique.gml', 'Globalcenter_with_label_unique.gml', 'Tinet_with_label_unique.gml', 'Cogentco_with_label_unique.gml', 'Kdl_with_label_unique.gml']:
-        f = '/scratch/gpfs/ia3026/cos561/neuroplan/source/data/topologies/' + file
-        file_path = 'topologies/gml_files/kdl_with_label_unique.gml'
-        excel_path = 'topologies/centrality_betweeness/KDL.xlsx'
+    for file in ['VisionNet', 'Globalcenter', 'Tinet', 'Cogentco', 'kdl']:
+        # f = '/scratch/gpfs/ia3026/cos561/neuroplan/source/data/topologies/' + file
+        file_path = 'topologies/gml_files/' + file + '_with_label_unique.gml'
+        excel_path = 'topologies/flow_communicability/' + file + '.xlsx'
         rtt_min = 2
         rtt_max = 5
         capacity_min = 0
@@ -276,7 +278,7 @@ if __name__ == '__main__':
         # c_min_flag = 1 for find_edge_capacity_heuristic_centrality_betweeness
         # c_min_flag = 2 for find_edge_capacity_heuristic_flow_betweeness
         # c_min_flag = 3 for find_edge_capacity_heuristic_flow_communicability_centrality
-        c_min_flag = 1
+        c_min_flag = 3
         process_graph_from_topology(file_path, 
                                     excel_path, 
                                     rtt_min, 
