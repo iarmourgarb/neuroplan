@@ -8,11 +8,11 @@ from topology.topology import Topology
 def read_topo(topo_name, adjust_factor_in=0.5):
     assert(topo_name in ["A", "B", "C", "D", "E"])
     topo_name_map_file_path = {}
-    topo_name_map_file_path['A'] = './data/topologies/centrality_betweeness/VisionNet.xlsx'
-    topo_name_map_file_path['B'] = './data/topologies/centrality_betweeness/Globalcenter.xlsx'
-    topo_name_map_file_path['C'] = './data/topologies/centrality_betweeness/Tinet.xlsx'
-    topo_name_map_file_path['D'] = './data/topologies/centrality_betweeness/Cogentco.xlsx'
-    topo_name_map_file_path['E'] = './data/topologies/centrality_betweeness/kdl.xlsx'
+    topo_name_map_file_path['A'] = './data/topologies/test_tinet/Tinet_topology_0.xlsx'
+    topo_name_map_file_path['B'] = './data/topologies/test_tinet/Tinet_topology_1.xlsx'
+    topo_name_map_file_path['C'] = './data/topologies/test_tinet/Tinet_topology_2.xlsx'
+    topo_name_map_file_path['D'] = './data/topologies/test_tinet/Tinet_topology_3.xlsx'
+    topo_name_map_file_path['E'] = './data/topologies/test_tinet/Tinet_topology_4.xlsx'
     
     file_path = topo_name_map_file_path[topo_name]
     
