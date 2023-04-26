@@ -262,10 +262,11 @@ def find_edge_capacity_heuristic_flow_communicability_centrality(g):
 
 
 if __name__ == '__main__':
-    for file in ['VisionNet', 'Globalcenter', 'Tinet', 'Cogentco', 'kdl']:
+    for file in ['Tinet']:
+    # for file in ['VisionNet', 'Globalcenter', 'Tinet', 'Cogentco', 'kdl']:
         # f = '/scratch/gpfs/ia3026/cos561/neuroplan/source/data/topologies/' + file
         file_path = 'topologies/gml_files/' + file + '_with_label_unique.gml'
-        excel_path = 'topologies/flow_communicability/' + file + '.xlsx'
+        excel_path = 'topologies/max_flow_topos/' + file + '_topology.xlsx'
         rtt_min = 2
         rtt_max = 5
         capacity_min = 0
@@ -278,7 +279,7 @@ if __name__ == '__main__':
         # c_min_flag = 1 for find_edge_capacity_heuristic_centrality_betweeness
         # c_min_flag = 2 for find_edge_capacity_heuristic_flow_betweeness
         # c_min_flag = 3 for find_edge_capacity_heuristic_flow_communicability_centrality
-        c_min_flag = 3
+        c_min_flag = False
         process_graph_from_topology(file_path, 
                                     excel_path, 
                                     rtt_min, 
