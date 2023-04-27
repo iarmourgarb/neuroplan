@@ -8,11 +8,11 @@ from topology.topology import Topology
 def read_topo(topo_name, adjust_factor_in=0.5):
     assert(topo_name in ["A", "B", "C", "D", "E"])
     topo_name_map_file_path = {}
-    topo_name_map_file_path['A'] = './data/topologies/test_tinet/Tinet_topology_0.xlsx'
-    topo_name_map_file_path['B'] = './data/topologies/test_tinet/Tinet_topology_1.xlsx'
-    topo_name_map_file_path['C'] = './data/topologies/test_tinet/Tinet_topology_2.xlsx'
-    topo_name_map_file_path['D'] = './data/topologies/test_tinet/Tinet_topology_3.xlsx'
-    topo_name_map_file_path['E'] = './data/topologies/test_tinet/Tinet_topology_4.xlsx'
+    topo_name_map_file_path['A'] = './data/topologies/flow_communicability/kdl.xlsx'
+    topo_name_map_file_path['B'] = './data/topologies/flow_betweeness/kdl.xlsx'
+    topo_name_map_file_path['C'] = './data/topologies/centrality_betweeness/kdl.xlsx'
+    topo_name_map_file_path['D'] = './data/topologies/flow_communicability/Cogentco.xlsx'
+    topo_name_map_file_path['E'] = './data/topologies/flow_communicability/kdl.xlsx'
     
     file_path = topo_name_map_file_path[topo_name]
     
@@ -39,7 +39,7 @@ def fig_7(epoch_num=10):
         if topo_name == "A":
             checker_mode_list = ["all", "sa", "vanilla"]
         else:
-            checker_mode_list = ["all", "sa"]
+            checker_mode_list = ["all", "sa", "vanilla"]
 
         for checker_mode in checker_mode_list:
             print(f'\n========== checker_mode:{checker_mode} topo_name:{topo_name} ==========\n')
