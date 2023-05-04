@@ -1,9 +1,11 @@
 ## 0. Introduction
-This repository contains the source code for our SIGCOMM'21 paper "Network Planning with Deep Reinforcement Learning".
+This repository contains the source code for the SIGCOMM'21 paper "Network Planning with Deep Reinforcement Learning".
 ### Notes
 The network topologies and the trained models used in the paper are not open-sourced. One can create synthetic topologies according to the problem formulation in the paper or modify the code for their own use case.
 
-## 1. Environment config UPDATED TO WORK ON MAC
+For COS561: We provide our example topologies in the /source/data/topologies folder. All topologies come from the Internet Topology Zoo.
+
+## 1. Environment config updated to work on the cluster
 
 ### Step 0: download the git repo
 ```
@@ -63,7 +65,7 @@ cd <repo>/source/c_solver
     - used to install Gurobi solver
 ## 3. Reproduce results (for SIGCOMM'21 artifact evaluation)
 ### Notes 
-- Some data points are time-consuming to get (i.e., First-stage for A-0, A-0.25, A-0.5, A-0.75 in Figure 8 and B, C, D, E in Figure 9). We provide pretrained models in `<repo>/source/results/trained/<topo_name>/`, which will be loaded by default. 
+- Some data points are time-consuming to get (i.e., First-stage for A-0, A-0.25, A-0.5, A-0.75 in Figure 8 and B, C, D, E in Figure 9).
 - We recommend distributing different data points and differetnt experiments on multiple AWS instances to run simultaneously.
 - The default `epoch_num` for Figure 10, 11 and 12 is set to be 1024, to guarantee the convergence. The training process can be terminated manually if convergence is observed.
 ### How to reproduce
@@ -71,11 +73,9 @@ cd <repo>/source/c_solver
 - Figure 7: `python test.py fig_7 <epoch_num>`, `epoch_num` can be set smaller than 10 (e.g. 2) to get results faster.
 - Figure 8: `python test.py single_dp_fig8 <alg> <adjust_factor>` produces one data point at a time (the default adjust_factor is 1).  
     - For example, `python test.py single_dp_fig8 ILP 0.0` runs ILP algorithm for `A-0`. 
-    - Pretrained models will be loaded by default if provided in `source/results/trained/`. To train from scratch which is **NOT RECOMMENDED**, run `python test.py single_dp_fig8 <alg> <adjust_factor> False`
-- Figure 9&13: `python test.py single_dp_fig9 <topo_name> <alg>` produces one data point at a time. 
-    - For example, `python test.py single_dp_fig9 E NeuroPlan` runs NeuroPlan (First-stage) for topology E with the pretrained model. To train from scratch which is **NOT RECOMMENDED**, run `python test.py single_dp_fig9 E NeuroPlan False`. 
-    - `python test.py second_stage <topo_name> <sol_path> <relax_factor>` can load the solution from the first stage in `<sol_path>` and run second-stage with `relax_factor=<relax_factor>` on topo `<topo_name>`. For example, `python test.py second_stage D "results/<log_dir>/opt_topo/***.txt" 1.5` 
-    - we also provide our results of First-stage in `results/trained/<topo_name>/<topo_name>.txt`, which can be used to run second-stage directly. For example, `python test.py second_stage C "results/trained/C/C.txt" 1.5`
+    - PRETRAINED MODELS ARE NOT PROVIDED. To train from scratch (which is **NOT RECOMMENDED** by the original NeuroPlan authors), run `python test.py single_dp_fig8 <alg> <adjust_factor> False`
+- *** untested on our topologies *** Figure 9&13: `python test.py single_dp_fig9 <topo_name> <alg> False` produces one data point at a time. 
+    - For example, `python test.py single_dp_fig9 E NeuroPlan False` runs NeuroPlan (First-stage) for topology E with no pretrained model.
 - Figure 10: `python test.py fig_10 <adjust_factor> <num_gnn_layer>`. 
     - `adjust_factor={0.0, 0.5, 1.0}, num_gnn_layer={0, 2, 4}`
     - For example, `python test.py fig_10 0.5 2` runs NeuroPlan with `2`-layer GNNs for topology `A-0.5`
@@ -87,4 +87,4 @@ cd <repo>/source/c_solver
     - For example, `python test.py fig_11 1.0 4` runs NeuroPlan with max_unit_per_step=`4` for topology `A-1`
 
 ## 4. Contact
-For any question, please contact `hzhu at jhu dot edu`.
+Original NeuroPlan contact: For any question, please contact `hzhu at jhu dot edu`.
